@@ -29,8 +29,12 @@ class Game:
             graph += f'|{self.status[i]}|{self.status[i + 1]}|{self.status[i + 2]}|\n'
         print(graph)
 
-    def fill_square(self, n, symbol):
-        i = int(n)
+    def fill_square(self, s, symbol):
+        if not s.isdigit():
+            return False
+        i = int(s)
+        if i not in range(9):
+            return False
         if self.status[i] in (Symbol.CIRCLE.value, Symbol.CROSS.value):
             return False
         else:
@@ -40,18 +44,14 @@ class Game:
     def check_game_status(self):
         for i in range(0, 9, 3):
             if len(set(self.status[i:i + 3])) == 1:
-                print(1)
                 print(self.status[i:i + 2])
                 return self.status[i]
         for i in range(3):
             if len({self.status[i], self.status[i + 3], self.status[i + 6]}) == 1:
-                print(2)
                 return self.status[i]
         if len(set(self.status[::4])) == 1 and self.status[0]:
-            print(3)
             return self.status[0]
         if len({self.status[2], self.status[4], self.status[6]}) == 1:
-            print(4)
             return self.status[2]
         return None
 
@@ -61,10 +61,10 @@ if __name__ == '__main__':
     game.winner = None
     turns = 1
     while not game.winner:
-        n = input('pick the square number:\n')
-        success = game.fill_square(int(n), game.symbol)
+        s = input('pick the square number:\n')
+        success = game.fill_square(s, game.symbol)
         if not success:
-            print('this square is already taken')
+            print('you have provided wrong value or this square is already taken')
             continue
         game.winner = game.check_game_status()
         game.toggle_symbol()
